@@ -15,7 +15,7 @@ function heandleError(response){
 
 
 
-function dataUserView(data) {
+function dataUserView(data) { 
    const bio = data.bio || 'Não definido'
    const name = data.name || 'Não definido'
     
