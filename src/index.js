@@ -14,28 +14,12 @@ function heandleError(response){
 }
 
 
-btnSearch.addEventListener('click', event => {
-    const users = inputUsers.value.trim()
-    event.preventDefault()
-    toObtainUsers(users)
-    toObtainRepositories(users)
-})
-
-function toObtainUsers(users){
-    const apiUrl = `https://api.github.com/users/${users}`
-    fetch(apiUrl)
-        .then(response => heandleError(response))
-        .then(response => response.json())
-        .then(data => dataUserView(data))
-}
-
-
 
 function dataUserView(data) {
    const bio = data.bio || 'Não definido'
    const name = data.name || 'Não definido'
     
-    const divStyle = 'p-10 rounded shadow-md'
+    const divStyle = 'md:p-10 rounded shadow-md'
     const divImgStyle = 'flex justify-center'
     const imgStyle = 'w-80 rounded shadow-md'
     const divUlStyle = 'flex justify-center'
@@ -94,16 +78,6 @@ function dataUserView(data) {
     usersContainer.innerHTML = ''
     return usersContainer.appendChild(div)
 
-}
-
-
-
-function toObtainRepositories () {
-    const users = inputUsers.value.trim()
-    const apiUrl = `https://api.github.com/users/${users}/repos`
-    fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => dataRepositories(data))
 }
 
 
@@ -176,6 +150,9 @@ function dataRepositories (data) {
         containerRepositories.innerHTML = ''
         top3Repositiorio.map(repos => {
 
+            const description = repos.description || 'não definido'
+            const language = repos.language || 'não definido'
+
             const divRepositoriesAllStyle = 'bg-white rounded p-4 m-4 border border-gray-300 shadow'
             const ballGreenStyle = 'bg-green-600 w-4 h-4 mt-1 rounded-full'
 
@@ -186,7 +163,7 @@ function dataRepositories (data) {
             pName.classList = 'font-bold'
             pName.textContent = `${repos.name}`
             const pDescription = document.createElement('p')
-            pDescription.textContent = `${repos.description}`
+            pDescription.textContent = `${description}`
 
             const divStargazersForks = document.createElement('div')
             divStargazersForks.classList = 'flex mt-4'
@@ -194,7 +171,7 @@ function dataRepositories (data) {
             ballGreen.classList = `${ballGreenStyle}`
             const pLanguage = document.createElement('p')
             pLanguage.classList = 'ml-1'
-            pLanguage.textContent = `${repos.language}`
+            pLanguage.textContent = `${language}`
             const pStargazers = document.createElement('p')
             pStargazers.classList = 'ml-4'
             pStargazers.textContent = `${repos.stargazers_count}`
@@ -213,11 +190,33 @@ function dataRepositories (data) {
             divRepositoriesAll.appendChild(divStargazersForks)
 
             return containerRepositories.appendChild(divRepositoriesAll)
-
         
         }) 
 
-        
       })
 }
 
+btnSearch.addEventListener('click', event => {
+    const users = inputUsers.value.trim()
+    event.preventDefault()
+    toObtainUsers(users)
+    toObtainRepositories(users)
+})
+
+
+function toObtainUsers(users){
+    const apiUrl = `https://api.github.com/users/${users}`
+    fetch(apiUrl)
+        .then(response => heandleError(response))
+        .then(response => response.json())
+        .then(data => dataUserView(data))
+}
+
+
+function toObtainRepositories () {
+    const users = inputUsers.value.trim()
+    const apiUrl = `https://api.github.com/users/${users}/repos`
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => dataRepositories(data))
+}
